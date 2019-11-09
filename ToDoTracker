@@ -1,0 +1,68 @@
+#!/bin/bash
+
+if [ -d "~/project2/todo" ]; then
+	mkdir ~/project2/todo | /dev/null
+fi
+
+if [ -d "~/project2/completed" ]; then
+	mkdir ~/project2/completed | /dev/null
+fi
+
+usage()
+{
+	echo "Usage: $0 [OPTIONS]"
+	echo "Options:"
+	echo -e "\thelp"
+	echo -e "\tlist [completed]"
+	echo -e "\tcomplete \e[3mnumber\e[0m"
+	echo -e "\tadd \e[3mtitle\e[0m"
+}
+
+singargs=('help' 'list')
+doubargs=('list' 'complete' 'add')
+
+case "$#" in
+	0)
+		clargs=('list')
+		;;
+	1)
+		if [[ ! "${singargs[@]}" =~ "$1" ]]; then
+			echo 'Could not understand arguments!'
+			usage
+			exit 1
+		fi
+		clargs=("$1")
+		;;
+	2)
+		if [[ ! "${doubargs[@]}" =~ "$1" ]] ||
+		   [ "$1" == 'list' -a "$2" != 'completed' ] ||
+		   [ "$1" == 'complete' ] &&
+		   [[ ! "$2" =~ ^[0-9]+$ ]]; then
+			echo 'Could not understand arguments!'
+			usage
+			exit 1
+		fi
+		clargs=("$1" "$2")
+		;;
+	*)
+		echo 'Too many arguments!'
+		usage
+		exit 1
+esac
+
+if [ "${clargs[0]}" == 'help' ]; then
+	usage
+
+elif [ "${clargs[0]}" == 'list' ]; then
+	if [ "${clargs[1]}" == 'completed' ]; then
+		./listcomp
+	else
+		./menu
+	fi
+
+elif [ "${clargs[0]}" == 'complete' ]; then
+	./comp ${clargs[1]}
+
+else
+	./add ${clargs[1]}
+fi

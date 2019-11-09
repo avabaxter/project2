@@ -1,0 +1,9 @@
+#!/bin/bash
+
+clear
+echo -e "Completed items:\n"
+
+for f in $(ls ~/project2/completed); do
+	echo -e "\t$f) \e[92m $(head -n1 ~/project2/completed/$f)\e[39m"
+done
+echo ""

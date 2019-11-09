@@ -1,0 +1,15 @@
+#!/bin/bash
+
+fname=$(($(ls ~/project2/completed | wc -l) + 1))
+mv ~/project2/todo/$1 ~/project2/completed/$fname
+
+for f in $(ls ~/project2/todo); do
+	if [ "$f" -gt "$1" ]; then
+		mv ~/project2/todo/$f ~/project2/todo/$((f - 1))
+	fi
+done
+
+clear
+echo -n "#$1 marked as complete"
+sleep 2
+clear

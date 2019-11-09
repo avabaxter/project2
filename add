@@ -1,0 +1,23 @@
+#!/bin/bash
+
+qflag=0
+fname=$(($(ls ~/project2/todo | wc -l) + 1))
+echo "$@" > ~/project2/todo/$fname
+
+while [ "$qflag" -eq 0 ]; do
+	clear
+	echo -e "\e[93m$@"
+	echo -e "\e[39m~~~~~\e[93m"
+	tail -n +2 ~/project2/todo/$fname
+	echo -e "\e[39m\n\n\n(Press enter to finish)\r\033[3A"
+	read -p 'Add a line to the description: ' desc
+
+	if [ -n "$desc" ]; then
+		echo "$desc" >> ~/project2/todo/$fname
+	else
+		qflag=1
+	fi
+done
+
+chmod 600 ~/project2/todo/$fname
+clear

@@ -1,0 +1,76 @@
+#!/bin/bash
+
+qflag=0
+
+while [ "$qflag" -eq 0 ]; do
+	clear
+	echo -e "\e[96m~~~~~~~~~~~~~~~~~~"
+	echo -e "TO-DO LIST TRACKER"
+	echo -e "~~~~~~~~~~~~~~~~~~\e[39m\n"
+	echo -e "Here are your current items:\n"
+	
+	for f in $(ls ~/project2/todo); do
+		echo -e "\t$f) \e[93m $(head -n1 ~/project2/todo/$f)\e[39m"
+	done
+
+	echo -e "\e[39m\nWhat would you like to do?\n"
+	if [ "$(ls ~/project2/todo | wc -l)" -gt 0 ]; then
+		echo -e "\t1-$f) See information on this item"
+		echo -e "\tA) Mark an item as complete"
+	fi
+	echo -e "\tB) Add a new item"
+	echo -e "\tC) See completed items"
+	echo -e "\n\tQ) \e[41mQuit\e[49m\n"
+
+	read -p 'Enter choice: ' choice
+
+	case "$choice" in
+		[1-$f])
+			clear
+			echo -e "\e[93m$(head -n1 ~/project2/todo/$choice)"
+			echo -e "\e[39m~~~~~"
+			echo -en "\e[93m$(tail -n +2 ~/project2/todo/$choice)\e[39m\n\n"
+			read -p "(Press enter to return to menu)"
+			;;
+		A|a)
+			clear
+			echo -e "Mark an item as complete\n"
+			for f in $(ls ~/project2/todo); do
+				echo -e "\t$f) \e[93m $(head -n1 ~/project2/todo/$f)\e[39m"
+			done
+			echo -en "\n\n\n(Press enter to return to menu)\r\033[2A"
+			read -p 'Enter selection: ' select
+			
+			if [[ "$select" =~ ^[0-9]+$ ]] &&
+			   [ "$select" -ge 1 -a "$select" -le $f ]; then
+				./comp $select
+			elif [ -n "$select" ]; then
+				clear
+				echo -n 'Could not understand selection!'
+				sleep 2
+			fi
+			;;
+		B|b)
+			clear
+			echo -e "Add a new item\n"
+			echo -en "\n\n(Press enter to return to menu)\r\033[2A"
+			read -p 'Enter a title: ' title
+			if [ -n "$title" ]; then
+				./add $title
+			fi
+			;;
+		C|c)
+			./listcomp
+			read -p '(Press enter to return to menu)'
+			;;
+		Q|q)
+			qflag=1
+			;;
+		*)
+			clear
+			echo -n 'Could not understand selection!'
+			sleep 2
+	esac
+done
+
+clear
