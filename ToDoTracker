@@ -55,14 +55,14 @@ if [ "${clargs[0]}" == 'help' ]; then
 
 elif [ "${clargs[0]}" == 'list' ]; then
 	if [ "${clargs[1]}" == 'completed' ]; then
-		./listcomp
+		~/project2/listcomp
 	else
-		./menu
+		~/project2/menu
 	fi
 
 elif [ "${clargs[0]}" == 'complete' ]; then
-	./comp ${clargs[1]}
+	~/project2/comp ${clargs[1]}
 
 else
-	./add ${clargs[1]}
+	~/project2/add ${clargs[1]}
 fi
